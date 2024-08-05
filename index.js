@@ -7,6 +7,7 @@ import path from "path";
 import userRoute from "./routes/user.route.js";
 import messageRoute from "./routes/message.route.js";
 import { app, server } from "./SocketIO/server.js";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -29,11 +30,14 @@ try {
 app.use("/api/user", userRoute);
 app.use("/api/message", messageRoute);
 
-app.use(express.static(path.join(__dirname, "public/build")));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, "public/dist")));
 
 // Handles any requests that don't match the ones above
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/build", "index.html"));
+  res.sendFile(path.join(__dirname, "public/dist", "index.html"));
 });
 
 app.get("/test", (req, res) => {
